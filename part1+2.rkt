@@ -1,36 +1,34 @@
 #lang racket
 
-(require math/array
-         (rename-in math/array
-                    [flarray fa]
-                    [flarray/ fa/]
-                    [flarray- fa-]
-                    [flarray+ fa+]
-                    [flarray* dot]))
+(require math/matrix
+         math/array)
 
 ; X = (hours sleeping, hours studying), y = Score on test
-(define X-abs (fa #[#[3 5] #[5 1] #[10 2]]))
-(define y-abs (fa #[#[75] #[82] #[93]]))
+(define X-abs (matrix [[3 5] [5 1] [10 2]]))
+(define y-abs (matrix [[75] [82] [93]]))
 
 ; Normalize
-(define X (fa/ X-abs (fa (array-all-max X-abs))))
-(define y (fa/ y-abs (fa 100)))
+(define X (matrix-scale X-abs (/ 1 (array-all-max X-abs))))
+(define y (matrix-scale y-abs (/ 1 100)))
 
-(define one (fa 1))
+(define one (array 1))
+(define (random-provider i j)
+  (random))
 (struct neural-network (W1 W2))
 
 (define (sigmoid z)
-  (fa/ one (fa+ one (flarray-map exp (fa- z)))))
+  (array/ one (array+ one (matrix-map exp (matrix- z)))))
 
 (define (forward nn x)
-  (let* ([z2 (dot x (neural-network-W1 nn))]
+  (let* ([z2 (matrix* x (neural-network-W1 nn))]
          [a2 (sigmoid z2)]
-         [z3 (dot a2 (neural-network-W2 nn))])
+         [z3 (matrix* a2 (neural-network-W2 nn))])
     (sigmoid z3)))
 
 (forward
   (neural-network
-    (array->flarray (build-array #[3 2] (λ (i) (random))))
-    (array->flarray (build-array #[3 1] (λ (i) (random)))))
+    (matrix [[0.3 0.5 0.9] [0.5 0.1 0.4]]) ;(build-matrix 2 3 random-provider)
+    (matrix [[0.5] [0.1] [0.2]]) ;(build-matrix 3 1 random-provider)
+    )
   X)
 

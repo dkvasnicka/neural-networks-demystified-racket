@@ -8,7 +8,7 @@
 (define y-abs (matrix [[75] [82] [93]]))
 
 ; Normalize
-(define X (matrix-scale X-abs (/ 1 (array-all-max X-abs))))
+(define X (array/ X-abs (array-axis-max X-abs 0)))
 (define y (matrix-scale y-abs (/ 1 100)))
 
 (define one (array 1))
@@ -27,8 +27,7 @@
 
 (forward
   (neural-network
-    (matrix [[0.3 0.5 0.9] [0.5 0.1 0.4]]) ;(build-matrix 2 3 random-provider)
-    (matrix [[0.5] [0.1] [0.2]]) ;(build-matrix 3 1 random-provider)
-    )
+    (build-matrix 2 3 random-provider)
+    (build-matrix 3 1 random-provider))
   X)
 

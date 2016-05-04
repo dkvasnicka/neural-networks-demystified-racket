@@ -3,6 +3,13 @@
 (require math/matrix
          math/array)
 
+(provide one
+         forward
+         X
+         y
+         neural-network
+         random-provider)
+
 ; X = (hours sleeping, hours studying), y = Score on test
 (define X-abs (matrix [[3 5] [5 1] [10 2]]))
 (define y-abs (matrix [[75] [82] [93]]))
